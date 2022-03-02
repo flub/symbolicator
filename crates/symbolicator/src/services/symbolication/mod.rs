@@ -1631,18 +1631,6 @@ impl std::fmt::Display for ProcError {
 
 impl std::error::Error for ProcError {}
 
-fn convert_frame_trust(trust: symbolic::minidump::processor::FrameTrust) -> FrameTrust {
-    match trust {
-        symbolic::minidump::processor::FrameTrust::None => FrameTrust::None,
-        symbolic::minidump::processor::FrameTrust::Scan => FrameTrust::Scan,
-        symbolic::minidump::processor::FrameTrust::CFIScan => FrameTrust::CfiScan,
-        symbolic::minidump::processor::FrameTrust::FP => FrameTrust::Fp,
-        symbolic::minidump::processor::FrameTrust::CFI => FrameTrust::Cfi,
-        symbolic::minidump::processor::FrameTrust::Prewalked => FrameTrust::PreWalked,
-        symbolic::minidump::processor::FrameTrust::Context => FrameTrust::Context,
-    }
-}
-
 fn stackwalk_with_breakpad(
     cfi_caches: Vec<(DebugId, PathBuf)>,
     minidump_path: PathBuf,
@@ -1720,7 +1708,7 @@ fn stackwalk_with_breakpad(
             frames.push(RawFrame {
                 instruction_addr: HexValue(return_address),
                 package: frame.module().map(CodeModule::code_file),
-                trust: convert_frame_trust(frame.trust()),
+                trust: frame.trust().into(),
                 ..RawFrame::default()
             });
         }

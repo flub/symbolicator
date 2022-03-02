@@ -287,6 +287,20 @@ impl From<minidump_processor::FrameTrust> for FrameTrust {
     }
 }
 
+impl From<symbolic::minidump::processor::FrameTrust> for FrameTrust {
+    fn from(source: symbolic::minidump::processor::FrameTrust) -> Self {
+        match source {
+            symbolic::minidump::processor::FrameTrust::None => FrameTrust::None,
+            symbolic::minidump::processor::FrameTrust::Scan => FrameTrust::Scan,
+            symbolic::minidump::processor::FrameTrust::CFIScan => FrameTrust::CfiScan,
+            symbolic::minidump::processor::FrameTrust::FP => FrameTrust::Fp,
+            symbolic::minidump::processor::FrameTrust::CFI => FrameTrust::Cfi,
+            symbolic::minidump::processor::FrameTrust::Prewalked => FrameTrust::PreWalked,
+            symbolic::minidump::processor::FrameTrust::Context => FrameTrust::Context,
+        }
+    }
+}
+
 /// A stack trace containing unsymbolicated stack frames.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct RawStacktrace {
